@@ -1,0 +1,42 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const shortid = require('shortid');
+const cors = require('cors');
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = 3000;
+
+app.use(bodyParser.json());
+app.use(cors());
+
+mongoose.connect('mongodb://localhost:27017/shortener', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const urlSchema = new mongoose.Schema({
+  originalUrl: String,
+  shortenedUrl: String
+});
+
+const Url = mongoose.model('Url', urlSchema);
+
+app.post('/api/shorten', async (req, res) => {
+  const { url } = req.body;
+  const shortenedUrl = shortid.generate();
+  const newUrl = new Url({ originalUrl: url, shortenedUrl });
+  await newUrl.save();
+  res.json({ shortenedUrl: `http://localhost:3000/${shortenedUrl}` });
+});
+
+app.get('/:shortenedUrl', async (req, res) => {
+  const { shortenedUrl } = req.params;
+  const url = await Url.findOne({ shortenedUrl });
+  if (url) {
+    res.redirect(url.originalUrl);
+  } else {
+    res.status(404).json({ error: 'URL not found' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
