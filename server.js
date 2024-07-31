@@ -3,14 +3,16 @@ const bodyParser = require('body-parser');
 const shortid = require('shortid');
 const cors = require('cors');
 const mongoose = require('mongoose');
+require('dotenv').config(); 
 
 const app = express();
 const PORT = 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
+const mongoUri = process.env.MONGODB_URI;
 
-mongoose.connect('mongodb://localhost:27017/shortener', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const urlSchema = new mongoose.Schema({
   originalUrl: String,
