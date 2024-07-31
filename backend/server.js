@@ -6,13 +6,17 @@ const mongoose = require('mongoose');
 require('dotenv').config(); 
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
+
 const mongoUri = process.env.MONGODB_URI;
 
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUri, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+});
 
 const urlSchema = new mongoose.Schema({
   originalUrl: String,
@@ -39,6 +43,9 @@ app.get('/:shortenedUrl', async (req, res) => {
   }
 });
 
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = app;
