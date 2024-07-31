@@ -30,7 +30,7 @@ app.post('/api/shorten', async (req, res) => {
   const shortenedUrl = shortid.generate();
   const newUrl = new Url({ originalUrl: url, shortenedUrl });
   await newUrl.save();
-  res.json({ shortenedUrl: `http://localhost:3000/${shortenedUrl}` });
+  res.json({ shortenedUrl: `https://url-shortener-backend-abhi.vercel.app/${shortenedUrl}` });
 });
 
 app.get('/:shortenedUrl', async (req, res) => {
