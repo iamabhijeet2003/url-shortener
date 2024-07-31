@@ -9,7 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: 'https://url-shortener-abhi.vercel.app',
+  methods: 'GET,POST',
+  allowedHeaders: 'Content-Type'
+}));
 
 const mongoUri = process.env.MONGODB_URI;
 
